@@ -1,3 +1,6 @@
+import 'package:companion_write_screen/widgets/GenderToggle.dart';
+import 'package:companion_write_screen/widgets/outlinedInputfield.dart';
+import 'package:companion_write_screen/widgets/select_button.dart';
 import 'package:flutter/material.dart';
 
 class CompanionWriteScreen extends StatelessWidget {
@@ -14,95 +17,82 @@ class CompanionWriteScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLabel('채팅방 인원'),
-              const SizedBox(height: 4),
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: '인원 수',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              _buildLabel('희망 성별'),
-              const SizedBox(height: 8),
-              Row(
+
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(
+              thickness: 1,
+              height: 6,
+              color: Colors.grey.shade300,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _genderButton('남성'),
-                  const SizedBox(width: 8),
-                  _genderButton('여성'),
-                  const SizedBox(width: 8),
-                  _genderButton('무관'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _buildLabel('희망 연령'),
-              const SizedBox(height: 4),
-              DropdownButtonFormField<String>(
-                items: [
-                  DropdownMenuItem(value: '10대', child: Text('10대')),
-                  DropdownMenuItem(value: '20대', child: Text('20대')),
-                  DropdownMenuItem(value: '30대', child: Text('30대')),
-                ],
-                onChanged: null, // 실제 값은 상태 관리 필요
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: '연령',
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildLabel('희망 응원팀'),
-              const SizedBox(height: 4),
-              DropdownButtonFormField<String>(
-                items: [
-                  DropdownMenuItem(value: 'LG 트윈스', child: Text('LG 트윈스')),
-                  DropdownMenuItem(value: '두산 베어스', child: Text('두산 베어스')),
-                  // 추가 팀 가능
-                ],
-                onChanged: null,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: '응원팀',
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildLabel('모집 글 작성'),
-              const SizedBox(height: 4),
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: '제목',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 8),
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: '글 내용',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 6,
-                maxLength: 1000,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal.shade200,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  const SizedBox(height: 12),
+                  _buildLabel('채팅방 인원'),
+                  const SizedBox(height: 4),
+                  OutlinedInputField(
+                    hintText: '인원 수',
+                    keyboardType: TextInputType.number,
                   ),
-                  child: const Text('완료'),
-                ),
+                  const SizedBox(height: 16),
+                  _buildLabel('희망 성별'),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(child: GenderToggle()),
+                      const SizedBox(width: 8),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildLabel('희망 연령'),
+                  const SizedBox(height: 4),
+                  SelectButton(
+                    hintText: '연령',
+                    options: ['~20대', '20대 ~ 30대', '30대 ~ 40대', '40대 이상', '연령 무관'],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildLabel('희망 응원팀'),
+                  const SizedBox(height: 4),
+                  SelectButton(
+                    hintText: '희망 응원팀',
+                    options: ['LG 트윈스', '두산 베어스'],
+                    onChanged: (value) {
+                      print('선택한 팀: $value');
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _buildLabel('모집 글 작성'),
+                  const SizedBox(height: 4),
+                  OutlinedInputField(
+                    hintText: '제목',
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedInputField(
+                    hintText: '글 내용',
+                    maxLines: 6,
+                    maxLength: 1000,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal.shade200,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text('완료'),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -110,14 +100,5 @@ class CompanionWriteScreen extends StatelessWidget {
 
   Widget _buildLabel(String text) {
     return Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
-  }
-
-  static Widget _genderButton(String label) {
-    return Expanded(
-      child: OutlinedButton(
-        onPressed: () {}, // 선택 로직은 상태관리 필요
-        child: Text(label),
-      ),
-    );
   }
 }
